@@ -185,15 +185,6 @@ Get-SnakeMove -ExportHTML "C:\Reports\snakemove.html"
 
 ---
 
-## Roadmap
-
-- [ ] `-ComputerName` parameter for remote host scanning via WinRM
-- [ ] JSON export format
-- [ ] Pester test suite expansion (CI integration)
-- [ ] Additional checks: LLMNR/NBT-NS status, Pass-the-Hash exposure, Kerberos delegation
-
----
-
 ## Disclaimer
 
 SnakeMove is developed for **authorized penetration testing, security auditing, and educational purposes only**.
