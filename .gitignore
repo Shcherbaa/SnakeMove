@@ -1,0 +1,21 @@
+# Generated reports
+*.csv
+*.html
+
+# PowerShell
+*.ps1xml
+*.pssproj
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+*.log
+.env
+
+# Pester output
+testResults.xml
+
+# Temp files
+~$*
+*.tmp
