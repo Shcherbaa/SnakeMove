@@ -26,7 +26,6 @@
 - [Output](#output)
 - [Export Formats](#export-formats)
 - [Requirements](#requirements)
-- [Roadmap](#roadmap)
 - [Disclaimer](#disclaimer)
 - [Author](#author)
 
@@ -182,15 +181,6 @@ Get-SnakeMove -ExportHTML "C:\Reports\snakemove.html"
 - **OS:** Windows (any version with PowerShell 5.1+)
 - **PowerShell:** 5.1 or higher
 - **Privileges:** Standard user for most checks. Administrator recommended — some checks (`Get-SmbServerConfiguration`, `Get-NetTCPConnection`) may return incomplete data without elevation.
-
----
-
-## Roadmap
-
-- [ ] `-ComputerName` parameter for remote host scanning via WinRM
-- [ ] JSON export format
-- [ ] Pester test suite expansion (CI integration)
-- [ ] Additional checks: LLMNR/NBT-NS status, Pass-the-Hash exposure, Kerberos delegation
 
 ---
 
