@@ -1,7 +1,7 @@
 #Requires -Version 5.1
 
 # =============================================================================
-# PRIVATE FUNCTIONS — internal workers, not exported
+# PRIVATE FUNCTIONS - internal workers, not exported
 # =============================================================================
 
 function Test-RdpStatus {
@@ -301,7 +301,7 @@ function Get-SnakeMove {
 .DESCRIPTION
     Get-SnakeMove runs the following checks against the target host to identify
     which lateral movement techniques are currently viable. Each check reads
-    actual registry keys, service states, and port bindings — no hardcoded
+    actual registry keys, service states, and port bindings - no hardcoded
     values or simulations.
  
     Checks performed:
@@ -326,20 +326,39 @@ function Get-SnakeMove {
 
 .EXAMPLE
     Get-SnakeMove
-
+ 
     Runs all checks and displays results in the console.
  
 .EXAMPLE
     Get-SnakeMove -Quiet -ExportCSV "C:\Windows\Diagnostics\system_audit.csv"
-
+ 
     Runs silently and saves results without producing any console output.
  
 .EXAMPLE
     $Data = Get-SnakeMove -Quiet | Where-Object { $_.Status -eq "OPEN" -or $_.Status -eq "PARTIAL" }
-
+ 
     Isolates both immediate vulnerabilities and conditionally viable attack paths in memory, 
     streamlining data collection for tactical pivot planning 
     while ignoring fully mitigated systems.
+ 
+.EXAMPLE
+    Get-SnakeMove -ExportHTML "C:\Reports\snakemove.html"
+ 
+    Runs all checks and saves a styled, dark-themed HTML report with an
+    executive summary and color-coded findings table.
+ 
+.EXAMPLE
+    Get-SnakeMove -ExportCSV "C:\Reports\audit.csv" -ExportHTML "C:\Reports\audit.html"
+ 
+    Runs all checks once and produces both a CSV and an HTML report in a
+    single pass, useful for feeding a SIEM while also keeping a human-readable
+    copy for a report appendix.
+ 
+.EXAMPLE
+    Get-SnakeMove -Quiet | ConvertTo-Json | Out-File "findings.json"
+ 
+    Runs silently and serializes the results to JSON, suitable for ingestion
+    by external tooling or log forwarding pipelines.
 
 .OUTPUTS
     [PSCustomObject[]]
@@ -455,15 +474,13 @@ function Get-SnakeMove {
         Write-Host (Get-Date -Format "yyyy-MM-dd HH:mm:ss") -ForegroundColor Yellow
         Write-Host ""
         Write-Host "  Running checks..." -ForegroundColor DarkGray
-        Write-Host ("  " + ("─" * 62)) -ForegroundColor DarkGray
+        Write-Host ("  " + ("-" * 62)) -ForegroundColor DarkGray
         Write-Host ""
 
     }
 
     # Elevation check
-    $isAdmin = ([Security.Principal.WindowsPrincipal]
-                [Security.Principal.WindowsIdentity]::GetCurrent()
-               ).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+    $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
                if (-not $isAdmin -and -not $Quiet) {
 
@@ -500,11 +517,11 @@ function Get-SnakeMove {
 
             switch ($item.Status) {
 
-                "OPEN" { $statusColor = "Red" $statusLabel = "[ OPEN    ]" }
-                "PARTIAL" { $statusColor = "Yellow" $statusLabel = "[ PARTIAL ]" }
-                "CLOSED" { $statusColor = "Green" $statusLabel = "[ CLOSED  ]" }
-                "ERROR" { $statusColor = "Magenta" $statusLabel = "[ ERROR   ]" }
-                default { $statusColor = "White" $statusLabel = "[ UNKNOWN ]" }
+                "OPEN"    { $statusColor = "Red";     $statusLabel = "[ OPEN    ]" }
+                "PARTIAL" { $statusColor = "Yellow";  $statusLabel = "[ PARTIAL ]" }
+                "CLOSED"  { $statusColor = "Green";   $statusLabel = "[ CLOSED  ]" }
+                "ERROR"   { $statusColor = "Magenta"; $statusLabel = "[ ERROR   ]" }
+                default   { $statusColor = "White";   $statusLabel = "[ UNKNOWN ]" }
 
             }
 
@@ -527,7 +544,7 @@ function Get-SnakeMove {
                 Write-Host $item.Risk -ForegroundColor $riskColor
                 Write-Host "  Detail    : " -NoNewline -ForegroundColor DarkGray
                 Write-Host $item.Detail -ForegroundColor Gray
-                Write-Host ("  " + ("─" * 62)) -ForegroundColor DarkGray
+                Write-Host ("  " + ("-" * 62)) -ForegroundColor DarkGray
                 Write-Host ""
         
         }
@@ -543,7 +560,7 @@ function Get-SnakeMove {
     if (-not $Quiet) {
 
     Write-Host "  SUMMARY" -ForegroundColor White
-    Write-Host ("  " + ("─" * 30)) -ForegroundColor DarkGray
+    Write-Host ("  " + ("-" * 30)) -ForegroundColor DarkGray
     Write-Host "  OPEN     : " -NoNewline -ForegroundColor DarkGray
     Write-Host "$openCount" -NoNewline -ForegroundColor Red
     Write-Host "  (active attack paths)" -ForegroundColor DarkGray
@@ -595,7 +612,7 @@ function Get-SnakeMove {
     # Optional HTML Export
     if ($ExportHTML) {
 
-        $reportHeader = "SnakeMove — Lateral Movement Audit | $($env:COMPUTERNAME) | $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+        $reportHeader = "SnakeMove - Lateral Movement Audit | $($env:COMPUTERNAME) | $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 
         $cssStyle = @"
 <style>
@@ -662,7 +679,7 @@ function Get-SnakeMove {
     $cssStyle
 </head>
 <body>
-    <h1>&#128013; SNAKEMOVE — Lateral Movement Audit</h1>
+    <h1>&#128013; SNAKEMOVE - Lateral Movement Audit</h1>
     <p class="meta">
         Target: $($env:COMPUTERNAME) &nbsp;|&nbsp;
         User: $("$env:USERDOMAIN\$env:USERNAME") &nbsp;|&nbsp;
@@ -691,7 +708,7 @@ function Get-SnakeMove {
         </tbody>
     </table>
 
-    <footer>Generated by SnakeMove v1.0.0 — For authorized penetration testing and educational use only.</footer>
+    <footer>Generated by SnakeMove v1.0.0 - For authorized penetration testing and educational use only.</footer>
 </body>
 </html>
 "@
@@ -718,3 +735,7 @@ function Get-SnakeMove {
 }
 
 Export-ModuleMember -Function Get-SnakeMove
+
+
+
+ 
